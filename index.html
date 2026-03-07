@@ -1,39 +1,237 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>En cours de construction !</title>
-    <style>
-        body {
-            height: 100vh;
-            margin: 0;
+<meta charset="UTF-8">
+<title>Portfolio - Jules Gerent</title>
 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+<style>
 
-            text-align: center;
-            font-family: "Courier New", Courier, monospace;
-            background-color: #f9f9f9; 
-            color: #333;
-        }
+body{
+    background:#0e0e0e;
+    color:#e5e5e5;
+    font-family:Courier, monospace;
+    margin:0;
+}
 
-        h1 {
-            font-size: 4rem; 
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-        }
+/* Bandeau */
 
-        p {
-            font-size: 1.5rem;
-            font-style: italic;
-        }
-    </style>
+header{
+    position:fixed;
+    top:0;
+    width:100%;
+    background:#0e0e0e;
+    border-bottom:1px solid #222;
+    text-align:center;
+    padding:20px 0;
+    font-size:28px;
+}
+
+/* Contenu */
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding-top:120px;
+}
+
+/* Bloc vidéo */
+
+.video{
+    display:flex;
+    align-items:center;
+    margin-bottom:45px;
+}
+
+.video img{
+    width:220px;
+    margin-right:25px;
+}
+
+.video h2{
+    margin:0;
+    font-size:20px;
+}
+
+.video p{
+    margin-top:5px;
+    color:#bdbdbd;
+}
+
+.video a{
+    text-decoration:none;
+    color:white;
+}
+
+.video a:hover{
+    text-decoration:underline;
+}
+
+.filter{
+text-align:center;
+margin-bottom:60px;
+}
+
+select{
+background:#111;
+color:white;
+border:1px solid #333;
+padding:8px 12px;
+font-family:Courier, monospace;
+}
+
+</style>
+
 </head>
+
+<script>
+
+    function filterVideos(year){
+    
+    let videos = document.querySelectorAll(".video");
+    
+    videos.forEach(video => {
+    
+    if(year === "all"){
+    video.style.display = "flex";
+    }
+    
+    else if(video.dataset.year === year){
+    video.style.display = "flex";
+    }
+    
+    else{
+    video.style.display = "none";
+    }
+    
+    });
+    
+    }
+    
+    </script>
+
 <body>
-    <h1>Editing With Jules</h1>
-    <p>Le site est en cours de construction, je fais au plus vite !!</p>
+
+<header>
+Portfolio - Jules Gerent
+</header>
+
+<div class="container">
+
+<div class="filter">
+    <select onchange="filterVideos(this.value)">
+    <option value="all">Toutes les années</option>
+    <option value="2026">2026</option>
+    <option value="2025">2025</option>
+    <option value="2024">2024</option>
+    <option value="2023">2023</option>
+    </select>
+</div>
+
+<!-- VIDEO 1 -->
+<div class="video" data-year="2026">
+<a href="https://www.youtube.com/" target="_blank">
+<img src="https://img.youtube.com/vi/blank/maxresdefault.jpg">
+</a>
+<div>
+<a href="https://www.youtube.com/" target="_blank">
+<h2>Vidéo de présentation</h2>
+</a>
+<p>Logiciels : After Effects 2020 & 2025 pour la vidéo, Premiere Pro 2026 & FL Studio pour le sound design. <br> Réalisé le : 06/03/2026 <br> <em> Note : il y a un problème avec l'hébergement sur YouTube, le problème est bientôt réglé.</em></p>
+</div>
+</div>
+
+<!-- VIDEO 2 -->
+<div class="video" data-year="2025">
+<a href="https://www.youtube.com/watch?v=9bsRKmLDpF4" target="_blank">
+<img src="https://img.youtube.com/vi/9bsRKmLDpF4/maxresdefault.jpg">
+</a>
+<div>
+<a href="https://www.youtube.com/watch?v=9bsRKmLDpF4" target="_blank">
+<h2>delusionnal</h2>
+</a>
+<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design. <br> Réalisé le : 23/09/2025 <br> Vidéo de type "edit" sur les réseaux sociaux. <br> <em> Note : je fais ce genre de vidéo uniquement pour moi, sans poster.</em></p>
+</div>
+</div>
+
+<!-- VIDEO 3 -->
+<div class="video" data-year="2025">
+    <a href="https://youtu.be/Apa-BMDYx_0" target="_blank">
+    <img src="https://img.youtube.com/vi/Apa-BMDYx_0/maxresdefault.jpg">
+    </a>
+    <div>
+    <a href="https://youtu.be/Apa-BMDYx_0" target="_blank">
+    <h2>Dark Thoughts</h2>
+    </a>
+    <p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design. <br> Réalisé le : 12/06/2025 <br> Vidéo de type "edit" sur les réseaux sociaux. <br> <em> Note : je fais ce genre de vidéo uniquement pour moi, sans poster.</em></p>
+    </div>
+    </div>
+    
+    <!-- VIDEO 4 -->
+    <div class="video" data-year="2025">
+    <a href="https://youtu.be/Ofu-LYxvYs4" target="_blank">
+    <img src="https://img.youtube.com/vi/Ofu-LYxvYs4/maxresdefault.jpg">
+    </a>
+    <div>
+    <a href="https://youtu.be/Ofu-LYxvYs4" target="_blank">
+    <h2>Effet spécial pour un clip de musique</h2>
+    </a>
+    <p>Logiciels : After Effects 2020 <br> Réalisé le : 17/11/2025 <br> Ajout d'une cigarette en 3D avec simulation de chute. <br> <em> Note : le clip n'est pas encore sorti.</em></p>
+    </div>
+    </div>
+    
+    <!-- VIDEO 5 -->
+    <div class="video" data-year="2024">
+    <a href="https://youtu.be/qe65Ir58W-I" target="_blank">
+    <img src="https://img.youtube.com/vi/qe65Ir58W-I/maxresdefault.jpg">
+    </a>
+    <div>
+    <a href="https://youtu.be/qe65Ir58W-I" target="_blank">
+    <h2>Jingle pour La Poste</h2>
+    </a>
+    <p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design. <br> Réalisé le : 19/06/2024 <br> Vidéo ayant pour but de promouvoir la flamme Olympique.</p>
+    </div>
+    </div>
+    
+    <!-- VIDEO 6 -->
+    <div class="video" data-year="2024">
+    <a href="https://youtu.be/EacXmIF0zLY" target="_blank">
+    <img src="https://img.youtube.com/vi/EacXmIF0zLY/maxresdefault.jpg">
+    </a>
+    <div>
+    <a href="https://youtu.be/EacXmIF0zLY" target="_blank">
+    <h2>Montage vidéo pour les équipes de La Poste</h2>
+    </a>
+    <p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design.<br> Réalisé le : 29/06/2024<br>Vidéo pour le groupe en interne, à l'occasion du passage de la flamme Olympique.</p>
+    </div>
+    </div>
+    
+    <!-- VIDEO 7 -->
+    <div class="video" data-year="2025">
+    <a href="https://youtu.be/fn6kioPD2Tw" target="_blank">
+    <img src="https://img.youtube.com/vi/fn6kioPD2Tw/maxresdefault.jpg">
+    </a>
+    <div>
+    <a href="https://youtu.be/fn6kioPD2Tw" target="_blank">
+    <h2>The Magic Buttle</h2>
+    </a>
+    <p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design.<br>Réalisé le : 14/03/2025<br>Réalisé dans le cadre d'un travail en Cinéma Audiovisuel.</p>
+    </div>
+    </div>
+    
+    <!-- VIDEO 8 -->
+    <div class="video" data-year="2025">
+    <a href="https://youtu.be/OfPK_AGkd-Y" target="_blank">
+    <img src="https://img.youtube.com/vi/OfPK_AGkd-Y/maxresdefault.jpg">
+    </a>
+    <div>
+    <a href="https://youtu.be/OfPK_AGkd-Y" target="_blank">
+    <h2>S'il vous plaît, laissez fermé.</h2>
+    </a>
+    <p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design.<br>Réalisé le : 01/06/2025<br>Ouverture pour la projection des films réalisés en spécialité & option Cinéma Audiovisuel.<br>Montage, étalonnage et tous éléments post-tournage ont été fait par moi, en 15 jours (en ayant les cours en même temps).</p>
+    </div>
+    </div>
+    
+</div>
+
 </body>
 </html>
