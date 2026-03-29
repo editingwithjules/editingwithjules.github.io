@@ -1,250 +1,913 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Portfolio - Jules Gerent</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jules' Portfolio</title>
 
-<style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-body{
-    background:#0e0e0e;
-    color:#e5e5e5;
-    font-family:Courier, monospace;
-    margin:0;
+  <style>
+    @font-face {
+    font-family: 'MADE Outer Sans';
+    src: url('assets/fonts/MADEOuterSans.woff2D:/Documents/Site WEB/V2/main.html') format('woff2');
+    font-weight: 400;
 }
 
-/* Bandeau */
+    /* ─── Variables ──────────────────────────────────────── */
+    :root {
+      --font: 'MADE Outer Sans', sans-serif;
+      --expo:    cubic-bezier(0.16, 1, 0.3, 1);
+      --cream:   #EDE8DF;
+      --dim:     rgba(237, 232, 223, 0.45);
+      --divider: rgba(237, 232, 223, 0.08);
+      --glass-bg:     rgba(255, 255, 255, 0.07);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --glass-shadow: rgba(0, 0, 30, 0.45);
+    }
 
-header{
-    position:fixed;
-    top:0;
-    width:100%;
-    background:#0e0e0e;
-    border-bottom:1px solid #222;
-    text-align:center;
-    padding:20px 0;
-    font-size:28px;
-}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-/* Contenu */
+    body {
+      font-family: var(--font);
+      color: var(--cream);
+      overflow-x: hidden;
+      background: linear-gradient(to bottom, #000000 0%, #00000d 30%, #000012 60%, #00001a 100%);
+      background-attachment: fixed;
+    }
 
-.container{
-    max-width:900px;
-    margin:auto;
-    padding-top:120px;
-}
 
-/* Bloc vidéo */
+    /* ═══════════════════════════════════════════════════════
+       SPLASH
+    ═══════════════════════════════════════════════════════ */
 
-.video{
-    display:flex;
-    align-items:center;
-    margin-bottom:45px;
-}
+    #splash {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      overflow: hidden;
+    }
 
-.video img{
-    width:220px;
-    margin-right:25px;
-}
+    #splash-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/cover-photo.jpg');
+      background-size: cover;
+      background-position: center;
+      background-color: #0a0a14;
+      transition: transform 1.2s var(--expo), filter 1.2s var(--expo);
+    }
 
-.video h2{
-    margin:0;
-    font-size:20px;
-}
+    #splash-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 10, 0.35);
+    }
 
-.video p{
-    margin-top:5px;
-    color:#bdbdbd;
-}
+    /* Conteneur du papier */
+    #paper-wrap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(200px, 34vw, 400px);
+      aspect-ratio: 3 / 4;
+      cursor: pointer;
+      transition: opacity 0.5s ease, transform 0.5s var(--expo);
+    }
 
-.video a{
-    text-decoration:none;
-    color:white;
-}
+    /* Hint "CLIQUER" → "ENTRER" au hover */
+    #paper-wrap::after {
+      content: 'CLIQUER';
+      position: absolute;
+      bottom: -38px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: rgba(255, 255, 255, 0.5);
+      animation: blink 2.2s ease-in-out infinite;
+      white-space: nowrap;
+      transition: content 0s;
+    }
 
-.video a:hover{
-    text-decoration:underline;
-}
+    #paper-wrap:hover::after {
+      content: 'ENTRER';
+      animation: none;
+      opacity: 0.9;
+    }
 
-.filter{
-text-align:center;
-margin-bottom:60px;
-}
+    @keyframes blink {
+      0%, 100% { opacity: 0.5; }
+      50%       { opacity: 0.1; }
+    }
 
-select{
-background:#111;
-color:white;
-border:1px solid #333;
-padding:8px 12px;
-font-family:Courier, monospace;
-}
+    #paper-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 3px;
+      transform: rotate(-3deg);
+      transition: transform 0.45s ease;
+    }
 
-</style>
+    #paper-wrap:hover img {
+      transform: rotate(-1deg) scale(1.025);
+    }
 
+    /* Sortie splash */
+    #splash.leaving #splash-bg {
+      transform: scale(1.07);
+      filter: blur(14px) brightness(0.5);
+    }
+
+    #splash.leaving #paper-wrap {
+      opacity: 0;
+      transform: translate(-50%, -56%) scale(0.9);
+    }
+
+    #splash.gone { display: none; }
+
+
+    /* ═══════════════════════════════════════════════════════
+       BULLE LIQUID GLASS
+    ═══════════════════════════════════════════════════════ */
+
+    #nav-glass {
+      position: fixed;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 8px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      box-shadow:
+        0 2px 24px var(--glass-shadow),
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        inset 0 -1px 0 rgba(255,255,255,0.04);
+      opacity: 0;
+      transform: translateX(-50%) translateY(-8px);
+      transition: opacity 0.7s ease 0.6s, transform 0.7s var(--expo) 0.6s;
+    }
+
+    #nav-glass.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .nav-btn {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      padding: 8px 20px;
+      border-radius: 999px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-btn.active {
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+
+    .nav-sep {
+      width: 1px;
+      height: 14px;
+      background: rgba(255,255,255,0.12);
+      flex-shrink: 0;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════
+       PORTFOLIO
+    ═══════════════════════════════════════════════════════ */
+
+    #portfolio {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.9s ease 0.2s, transform 0.9s var(--expo) 0.2s;
+    }
+
+    #portfolio.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── Hero ───────────────────────────────────────────── */
+    #accueil {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(80px, 12vw, 140px) clamp(28px, 6vw, 88px) clamp(60px, 8vw, 100px);
+      /* On laisse de la place en haut pour la bulle + l'asset hero */
+    }
+
+    /* ─── Zone asset hero ────────────────────────────────────
+       C'est ici que tu placeras ton illustration centrale.
+
+       DIMENSIONS RECOMMANDÉES :
+       - Format : 16:9 paysage  →  1600 × 900 px (affiché à ~70% de la largeur)
+         OU format libre selon ton illustration
+       - Export : PNG fond transparent, minimum 1200px de large
+       - Le conteneur s'adapte à la largeur disponible
+
+       La zone fait environ 60–70vw de large et s'étend
+       sur environ 55–60vh de hauteur selon l'écran.
+    ──────────────────────────────────────────────────────── */
+    #hero-asset-zone {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(100px, 14vh, 160px) 0 clamp(32px, 5vh, 64px);
+      /* ↑ Le padding-top réserve la place pour la bulle Liquid Glass (~90px) */
+    }
+
+    #hero-asset-zone img {
+      width: clamp(300px, 65vw, 1000px);
+      height: auto;
+      display: block;
+      /* Retire ce filtre si ton PNG a déjà un fond transparent nickel */
+      filter: drop-shadow(0 16px 48px rgba(0,0,20,0.7));
+    }
+
+    /* Placeholder visible si l'image n'est pas encore là */
+    #hero-asset-zone .asset-placeholder {
+      width: clamp(300px, 65vw, 1000px);
+      aspect-ratio: 16/9;
+      border: 1px dashed rgba(237,232,223,0.15);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: rgba(237,232,223,0.2);
+    }
+
+    #hero-asset-zone .asset-placeholder span {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    #hero-asset-zone .asset-placeholder .dims {
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0.6;
+    }
+
+    /* Bas du hero : nom */
+    #accueil .hero-name {
+      margin-top: auto;
+    }
+
+    .eyebrow {
+      font-size: clamp(11px, 1.2vw, 13px);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 16px;
+    }
+
+    #accueil h1 {
+      font-size: clamp(52px, 10vw, 140px);
+      font-weight: 700;
+      line-height: 0.93;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--cream);
+    }
+
+    #accueil h1 em {
+      font-style: normal;
+      color: rgba(237, 232, 223, 0.15);
+    }
+
+    .glow-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(237,232,223,0.15) 20%, rgba(237,232,223,0.15) 80%, transparent);
+    }
+
+    /* ─── Projets ────────────────────────────────────────── */
+    #projets {
+      padding: clamp(80px, 10vw, 130px) clamp(28px, 6vw, 88px);
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: clamp(48px, 7vw, 96px);
+    }
+
+    .entry {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: clamp(40px, 7vw, 110px);
+      padding: clamp(56px, 8vw, 110px) 0;
+    }
+
+    .entry + .entry { border-top: 1px solid var(--divider); }
+
+    .entry.flip .asset-wrap { order: 2; }
+    .entry.flip .text-wrap  { order: 1; }
+
+    .asset-wrap { position: relative; }
+
+    .asset-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.55s var(--expo);
+      filter: drop-shadow(0 8px 32px rgba(0,0,40,0.6));
+    }
+
+    .asset-wrap:hover img {
+      transform: scale(1.025) rotate(0deg) !important;
+    }
+
+    .asset-wrap::before {
+      content: attr(data-num);
+      position: absolute;
+      bottom: -12px;
+      right: -6px;
+      font-size: clamp(80px, 12vw, 150px);
+      font-weight: 700;
+      color: rgba(237,232,223,0.04);
+      line-height: 1;
+      z-index: -1;
+      letter-spacing: -0.05em;
+      user-select: none;
+    }
+
+    .text-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .text-wrap .tag {
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .text-wrap h2 {
+      font-size: clamp(26px, 4vw, 50px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      color: var(--cream);
+    }
+
+    .text-wrap p {
+      font-size: clamp(15px, 1.5vw, 17px);
+      line-height: 1.75;
+      color: var(--dim);
+      max-width: 40ch;
+    }
+
+    /* Bouton "Voir le projet" — ouvre la page projet */
+    .btn-projet {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: none;
+      border: none;
+      border-bottom: 1px solid rgba(237,232,223,0.3);
+      padding-bottom: 3px;
+      width: fit-content;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-projet::after { content: ' →'; }
+
+    .btn-projet:hover {
+      color: rgba(237,232,223,0.5);
+      border-color: rgba(237,232,223,0.1);
+    }
+
+    /* ─── Contact ────────────────────────────────────────── */
+    #contact {
+      /*min-height: 60vh;   */
+      padding: clamp(80px, 10vw, 130px) clamp(28px, 6vw, 88px);
+      border-top: 1px solid var(--divider);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    #contact .big {
+      font-size: clamp(32px, 6vw, 82px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--cream);
+    }
+
+    #contact .links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    #contact .links a {
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    #contact .links a:hover { color: var(--cream); }
+
+    .footer-bottom {
+      padding: 28px clamp(28px, 6vw, 88px);
+      border-top: 1px solid var(--divider);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(237,232,223,0.18);
+    }
+
+
+    /* ═══════════════════════════════════════════════════════
+       PAGE PROJET (overlay plein écran)
+    ═══════════════════════════════════════════════════════ */
+
+    #projet-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: linear-gradient(to bottom, #000000 0%, #00001a 100%);
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.55s var(--expo);
+    }
+
+    #projet-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .projet-inner {
+      min-height: 100vh;
+      padding: clamp(100px, 12vh, 140px) clamp(28px, 6vw, 88px) clamp(60px, 8vh, 100px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(40px, 6vw, 72px);
+    }
+
+    /* Bouton retour Liquid Glass */
+    #btn-retour {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 10px 22px;
+      cursor: pointer;
+      backdrop-filter: blur(20px) saturate(140%);
+      -webkit-backdrop-filter: blur(20px) saturate(140%);
+      box-shadow: 0 2px 18px var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.1);
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    #btn-retour::before { content: '←'; }
+
+    #btn-retour:hover {
+      background: rgba(255,255,255,0.12);
+      transform: scale(1.03);
+    }
+
+    /* Layout vidéo + info */
+    .projet-content {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(32px, 5vw, 72px);
+      align-items: start;
+    }
+
+    /* Lecteur YouTube */
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #0a0a14;
+      box-shadow: 0 12px 48px rgba(0,0,30,0.7);
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Infos projet */
+    .projet-info {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-top: 8px;
+    }
+
+    .projet-info .p-tag {
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .projet-info h2 {
+      font-size: clamp(28px, 4vw, 54px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      color: var(--cream);
+    }
+
+    .projet-info .p-desc {
+      font-size: clamp(15px, 1.5vw, 17px);
+      line-height: 1.8;
+      color: var(--dim);
+    }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .projet-content {
+        grid-template-columns: 1fr;
+      }
+
+      .entry, .entry.flip {
+        grid-template-columns: 1fr;
+      }
+
+      .entry.flip .asset-wrap { order: 1; }
+      .entry.flip .text-wrap  { order: 2; }
+
+      #contact {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      #contact .links { align-items: flex-start; }
+    }
+  </style>
 </head>
-
-<script>
-
-    function filterVideos(year){
-    
-    let videos = document.querySelectorAll(".video");
-    
-    videos.forEach(video => {
-    
-    if(year === "all"){
-    video.style.display = "flex";
-    }
-    
-    else if(video.dataset.year === year){
-    video.style.display = "flex";
-    }
-    
-    else{
-    video.style.display = "none";
-    }
-    
-    });
-    
-    }
-    
-    </script>
-
 <body>
 
-<header>
-Portfolio - Jules Gerent
-</header>
+  <!-- ═══════════════════════════════════════════
+       SPLASH
+  ════════════════════════════════════════════ -->
+  <div id="splash">
+    <div id="splash-bg"></div>
 
-<div class="container">
-
-<div class="filter">
-    <select onchange="filterVideos(this.value)">
-    <option value="all">Toutes les années</option>
-    <option value="2026">2026</option>
-    <option value="2025">2025</option>
-    <option value="2024">2024</option>
-    <option value="2023">2023</option>
-    </select>
-</div>
-
-    
-<div class="video" data-year="2026">
-<a href="https://youtu.be/lSTJbk_yywo" target="_blank">
-<img src="https://img.youtube.com/vi/lSTJbk_yywo/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/lSTJbk_yywo" target="_blank">
-<h2>Vidéo de présentation</h2>
-</a>
-<p>Logiciels : After Effects 2020 & 2025 pour la vidéo, Premiere Pro 2026 & FL Studio pour le sound design. <br> Réalisé le : 17/03/2026 <br> <em> Note : la vidéo avait pour but d'être postée sur les réseaux sociaux, non pas pour vous.</em></p>
-</div>
-</div>
+    <div id="paper-wrap" role="button" aria-label="Entrer dans le portfolio">
+      <!--
+        TON PNG PAPIER FROISSÉ ici.
+        Dimensions recommandées : 800 × 1067 px (ratio 3:4), fond transparent.
+        Remplace le src :
+      -->
+      <img src="assets/paper-portfolio.png" alt="Portfolio" />
+    </div>
+  </div>
 
 
-<div class="video" data-year="2025">
-<a href="https://youtu.be/79gmNH6kAUw" target="_blank">
-<img src="https://img.youtube.com/vi/79gmNH6kAUw/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/79gmNH6kAUw" target="_blank">
-<h2>delusionnal</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design. <br> Réalisé le : 23/09/2025 <br> Vidéo de type "edit" sur les réseaux sociaux. <br> <em> Note : je fais ce genre de vidéo uniquement pour moi, sans poster.</em></p>
-</div>
-</div>
+  <!-- ═══════════════════════════════════════════
+       BULLE LIQUID GLASS
+  ════════════════════════════════════════════ -->
+  <nav id="nav-glass" aria-label="Navigation">
+    <a href="#accueil" class="nav-btn">Accueil</a>
+    <div class="nav-sep"></div>
+    <a href="#projets" class="nav-btn">Projets</a>
+    <div class="nav-sep"></div>
+    <a href="#contact" class="nav-btn">Contact</a>
+  </nav>
 
 
-<div class="video" data-year="2025">
-<a href="https://youtu.be/Apa-BMDYx_0" target="_blank">
-<img src="https://img.youtube.com/vi/Apa-BMDYx_0/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/Apa-BMDYx_0" target="_blank">
-<h2>Dark Thoughts</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design. <br> Réalisé le : 12/06/2025 <br> Vidéo de type "edit" sur les réseaux sociaux. <br> <em> Note : je fais ce genre de vidéo uniquement pour moi, sans poster.</em></p>
-</div>
-</div>
+  <!-- ═══════════════════════════════════════════
+       PORTFOLIO
+  ════════════════════════════════════════════ -->
+  <div id="portfolio">
 
-    
-<div class="video" data-year="2025">
-<a href="https://youtu.be/Ofu-LYxvYs4" target="_blank">
-<img src="https://img.youtube.com/vi/Ofu-LYxvYs4/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/Ofu-LYxvYs4" target="_blank">
-<h2>Effet spécial pour un clip de musique</h2>
-</a>
-<p>Logiciels : After Effects 2020 <br> Réalisé le : 17/11/2025 <br> Ajout d'une cigarette en 3D avec simulation de chute. <br> <em> Note : le clip n'est pas encore sorti.</em></p>
-</div>
-</div>
+    <!-- ── Hero ── -->
+    <section id="accueil">
 
-    
-<div class="video" data-year="2024">
-<a href="https://youtu.be/qe65Ir58W-I" target="_blank">
-<img src="https://img.youtube.com/vi/qe65Ir58W-I/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/qe65Ir58W-I" target="_blank">
-<h2>Jingle pour La Poste</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design. <br> Réalisé le : 19/06/2024 <br> Vidéo ayant pour but de promouvoir le passage de la flamme Olymique dans la ville de Sorgues  (84700).</p>
-</div>
-</div>
-    
+      <!--
+        ┌─────────────────────────────────────────────────────┐
+        │  ZONE ASSET HERO                                    │
+        │  Place ici ton illustration principale              │
+        │                                                     │
+        │  DIMENSIONS RECOMMANDÉES :                         │
+        │  • Largeur : 1600 px                               │
+        │  • Hauteur : libre (selon composition)             │
+        │    → ratio 16:9 = 1600 × 900 px                   │
+        │    → ratio 4:3  = 1600 × 1200 px                  │
+        │    → ratio libre selon ton illustration            │
+        │  • Format : PNG fond transparent                   │
+        │  • L'image s'affiche à ~65vw (max 1000px)         │
+        └─────────────────────────────────────────────────────┘
+      -->
+      <div id="hero-asset-zone">
+        <!--
+          Quand ton asset est prêt, remplace le placeholder par :
+          <img src="assets/hero-illustration.png" alt="Illustration principale" />
+        -->
+        <div class="asset-placeholder">
+          <span>Ton asset ici</span>
+          <span class="dims">1600 × 900 px · PNG fond transparent</span>
+        </div>
+      </div>
 
-<div class="video" data-year="2024">
-<a href="https://youtu.be/EacXmIF0zLY" target="_blank">
-<img src="https://img.youtube.com/vi/EacXmIF0zLY/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/EacXmIF0zLY" target="_blank">
-<h2>Montage vidéo pour les équipes de La Poste</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design.<br> Réalisé le : 29/06/2024<br>Vidéo pour le groupe en interne, à l'occasion du passage de la flamme Olympique.</p>
-</div>
-</div>
-    
+      <div class="hero-name">
+        <p class="eyebrow">Portfolio — 2025</p>
+        <h1>Prénom<br><em>Nom</em></h1>
+      </div>
 
-<div class="video" data-year="2025">
-<a href="https://youtu.be/fn6kioPD2Tw" target="_blank">
-<img src="https://img.youtube.com/vi/fn6kioPD2Tw/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/fn6kioPD2Tw" target="_blank">
-<h2>The Magic Buttle</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design.<br>Réalisé le : 14/03/2025<br>Réalisé dans le cadre d'un travail en Cinéma Audiovisuel.</p>
-</div>
-</div>
-    
+    </section>
 
-<div class="video" data-year="2025">
-<a href="https://youtu.be/OfPK_AGkd-Y" target="_blank">
-<img src="https://img.youtube.com/vi/OfPK_AGkd-Y/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/OfPK_AGkd-Y" target="_blank">
-<h2>S'il vous plaît, laissez fermé.</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design.<br>Réalisé le : 01/06/2025<br>Ouverture pour la projection des films réalisés en spécialité & option Cinéma Audiovisuel projeté au cinéma Utopia.<br>Montage, étalonnage et tous éléments post-tournage ont été fait par moi, en devant respecter un délai de 15 jours (en ayant les cours en même temps).</p>
-</div>
-</div>
-    
+    <div class="glow-divider"></div>
 
-<div class="video" data-year="">
-<a href="https://youtu.be/wPozO-xVoao" target="_blank">
-<img src="https://img.youtube.com/vi/wPozO-xVoao/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/wPozO-xVoao" target="_blank">
-<h2>AV-17</h2>
-</a>
-<p>Logiciels : After Effects 2022 pour les VFX et Final Cut Pro pour le sound design & montage.<br>Réalisé le : 04/02/2023<br>Réalisation du sript au montage d'un court-métrage dans le thème "le temps qui s'arrête" avec le soutien de Luc Serard, proposé par Kino-A puis projeté au cinéma VOX le 07/04/2023. </p>
-</div>
-</div>
+    <!-- ── Projets ── -->
+    <section id="projets">
+      <p class="section-label">Projets sélectionnés</p>
 
-</div>
+      <!--
+        DIMENSIONS DES ASSETS PROJETS :
+        • Largeur : 900 px
+        • Hauteur : libre selon ton illustration
+          → carré 900 × 900 px fonctionne très bien
+          → portrait 900 × 1100 px pour un effet plus graphique
+        • Format : PNG fond transparent
+        • L'image s'affiche à ~45% de la largeur de la page
+      -->
+
+      <!-- 01 — asset gauche -->
+      <article class="entry" data-youtube="lSTJbk_yywo" data-titre="Titre du projet 01" data-tag="Illustration" data-desc="Description complète de ton premier projet. Parle des intentions, des techniques, de ce qui t'a inspiré. Tu peux être aussi long que tu veux ici.">
+        <div class="asset-wrap" data-num="01">
+          <img src="assets/illustration-01.png" alt="Projet 01" style="rotate: -2deg;" />
+        </div>
+        <div class="text-wrap">
+          <span class="tag">Projet 01 · Illustration</span>
+          <h2>Titre du<br>projet ici</h2>
+          <p>Description courte visible sur la page principale.</p>
+          <button class="btn-projet">Voir le projet</button>
+        </div>
+      </article>
+
+      <!-- 02 — asset droite -->
+      <article class="entry flip" data-youtube="dQw4w9WgXcQ" data-titre="Titre du projet 02" data-tag="Design" data-desc="Description complète de ton deuxième projet.">
+        <div class="asset-wrap" data-num="02">
+          <img src="assets/illustration-02.png" alt="Projet 02" style="rotate: 3deg;" />
+        </div>
+        <div class="text-wrap">
+          <span class="tag">Projet 02 · Design</span>
+          <h2>Deuxième<br>projet</h2>
+          <p>Description courte visible sur la page principale.</p>
+          <button class="btn-projet">Voir le projet</button>
+        </div>
+      </article>
+
+      <!-- 03 — asset gauche -->
+      <article class="entry" data-youtube="dQw4w9WgXcQ" data-titre="Titre du projet 03" data-tag="Motion" data-desc="Description complète de ton troisième projet.">
+        <div class="asset-wrap" data-num="03">
+          <img src="assets/illustration-03.png" alt="Projet 03" style="rotate: -1deg;" />
+        </div>
+        <div class="text-wrap">
+          <span class="tag">Projet 03 · Motion</span>
+          <h2>Troisième<br>projet</h2>
+          <p>Description courte visible sur la page principale.</p>
+          <button class="btn-projet">Voir le projet</button>
+        </div>
+      </article>
+
+      <!-- 04 — asset droite -->
+      <article class="entry flip" data-youtube="dQw4w9WgXcQ" data-titre="Titre du projet 04" data-tag="Branding" data-desc="Description complète de ton quatrième projet.">
+        <div class="asset-wrap" data-num="04">
+          <img src="assets/illustration-04.png" alt="Projet 04" style="rotate: 2deg;" />
+        </div>
+        <div class="text-wrap">
+          <span class="tag">Projet 04 · Branding</span>
+          <h2>Quatrième<br>projet</h2>
+          <p>Description courte visible sur la page principale.</p>
+          <button class="btn-projet">Voir le projet</button>
+        </div>
+      </article>
+
+      <!--
+        ╔══════════════════════════════════════════════════════╗
+        ║  AJOUTER UN PROJET :                                ║
+        ║  Copie un <article class="entry"> ou flip,         ║
+        ║  change data-youtube="ID_YOUTUBE" (l'ID de         ║
+        ║  ta vidéo, ex: pour youtube.com/watch?v=ABC → ABC) ║
+        ║  et remplis data-titre, data-tag, data-desc.       ║
+        ╚══════════════════════════════════════════════════════╝
+      -->
+
+    </section>
+
+    <div class="glow-divider"></div>
+
+    <!-- ── Contact ── -->
+    <footer id="contact">
+      <div class="big">On travaille<br>ensemble ?</div>
+      <div class="links">
+        <a href="mailto:contact.jxlsvfx@gmail.com">contact.jxlsvfx@gmail.com</a>
+        <a href="https://fr.fiverr.com/s/0bwxVaL" target="_blank">Fiverr</a>
+        <a href="https://www.linkedin.com/in/jules-gerent-4210723a8/" target="_blank">LinkedIn</a>
+      </div>
+    </footer>
+    <div class="footer-bottom" style="opacity:0.4">
+        MADE Outer Sans font licensed under CC BY 4.0
+      </div>
+    <div class="footer-bottom">© 2026 — Jules Gerent</div>
+
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       PAGE PROJET (overlay)
+  ════════════════════════════════════════════ -->
+  <div id="projet-overlay" aria-hidden="true">
+    <div class="projet-inner">
+
+      <button id="btn-retour">Retour</button>
+
+      <div class="projet-content">
+
+        <!-- Lecteur YouTube -->
+        <div class="video-wrap">
+          <iframe
+            id="projet-video"
+            src=""
+            title="Vidéo du projet"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+
+        <!-- Infos -->
+        <div class="projet-info">
+          <span class="p-tag" id="projet-tag"></span>
+          <h2 id="projet-titre"></h2>
+          <p class="p-desc" id="projet-desc"></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       JAVASCRIPT
+  ════════════════════════════════════════════ -->
+  <script>
+    /* ── Splash ─────────────────────────────── */
+    const paperWrap = document.getElementById('paper-wrap');
+    const splash    = document.getElementById('splash');
+    const portfolio = document.getElementById('portfolio');
+    const navGlass  = document.getElementById('nav-glass');
+
+    document.body.style.overflow = 'hidden';
+
+    paperWrap.addEventListener('click', () => {
+      splash.classList.add('leaving');
+      setTimeout(() => {
+        splash.classList.add('gone');
+        portfolio.classList.add('visible');
+        navGlass.classList.add('visible');
+        document.body.style.overflow = '';
+        updateActiveNav();
+      }, 900);
+    });
+
+    /* ── Active nav au scroll ───────────────── */
+    const navBtns  = document.querySelectorAll('.nav-btn');
+    const sectionIds = ['accueil', 'projets', 'contact'];
+
+    function updateActiveNav() {
+        const scrollPos = window.scrollY + window.innerHeight / 2;
+
+        sectionIds.forEach(id => {
+            const section = document.getElementById(id);
+            const top = section.offsetTop;
+            const bottom = top + section.offsetHeight;
+
+            const btn = document.querySelector(`.nav-btn[href="#${id}"]`);
+
+            if (scrollPos >= top && scrollPos < bottom) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+    /* ── Page projet ────────────────────────── */
+    const overlay     = document.getElementById('projet-overlay');
+    const projetVideo = document.getElementById('projet-video');
+    const projetTitre = document.getElementById('projet-titre');
+    const projetTag   = document.getElementById('projet-tag');
+    const projetDesc  = document.getElementById('projet-desc');
+    const btnRetour   = document.getElementById('btn-retour');
+
+    // Ouvrir un projet au clic sur "Voir le projet"
+    document.querySelectorAll('.btn-projet').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const article = btn.closest('.entry');
+        const ytId    = article.dataset.youtube;
+        const titre   = article.dataset.titre;
+        const tag     = article.dataset.tag;
+        const desc    = article.dataset.desc;
+
+        // Remplace l'ID YouTube dans l'URL de l'iframe
+        // Exemple : data-youtube="dQw4w9WgXcQ"
+        // → remplace par l'ID de ta vraie vidéo
+        projetVideo.src =
+            "https://www.youtube.com/embed/" +
+            ytId +
+            "?autoplay=1&mute=1&rel=0&playsinline=1";
+        projetTitre.textContent = titre;
+        projetTag.textContent   = tag;
+        projetDesc.textContent  = desc;
+
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    // Fermer l'overlay
+    btnRetour.addEventListener('click', () => {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      // Coupe la vidéo en vidant le src
+      setTimeout(() => { projetVideo.src = ''; }, 400);
+    });
+
+    // Fermer aussi avec Échap
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) {
+        btnRetour.click();
+      }
+    });
+  </script>
 
 </body>
 </html>
