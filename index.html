@@ -1,250 +1,156 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Portfolio - Jules Gerent</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jules Gerent</title>
+  <meta http-equiv="refresh" content="1;url=https://julesgerent.github.io/portfolio" />
 
-<style>
+  <style>
+    @font-face {
+      font-family: 'MADE Outer Sans';
+      src: url('assets/fonts/MADEOuterSans.woff2') format('woff2');
+      font-weight: 400;
+    }
 
-body{
-    background:#0e0e0e;
-    color:#e5e5e5;
-    font-family:Courier, monospace;
-    margin:0;
-}
+    :root {
+      --font: 'MADE Outer Sans', sans-serif;
+      --expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --cream: #EDE8DF;
+      --dim: rgba(237, 232, 223, 0.45);
+      --divider: rgba(237, 232, 223, 0.08);
+      --glass-bg: rgba(255, 255, 255, 0.07);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --glass-shadow: rgba(0, 0, 30, 0.45);
+    }
 
-/* Bandeau */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scrollbar-width: none; }
+    html::-webkit-scrollbar { display: none; }
 
-header{
-    position:fixed;
-    top:0;
-    width:100%;
-    background:#0e0e0e;
-    border-bottom:1px solid #222;
-    text-align:center;
-    padding:20px 0;
-    font-size:28px;
-}
+    body {
+      font-family: var(--font);
+      color: var(--cream);
+      overflow: hidden;
+      height: 100vh;
+      background: linear-gradient(to bottom, #000000 0%, #00000d 30%, #000012 60%, #00001a 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(32px, 5vw, 56px);
+    }
 
-/* Contenu */
+    .wordmark {
+      font-size: clamp(52px, 10vw, 140px);
+      font-weight: 700;
+      line-height: 0.93;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.8s var(--expo) 0.1s forwards;
+    }
 
-.container{
-    max-width:900px;
-    margin:auto;
-    padding-top:120px;
-}
+    .wordmark em {
+      font-style: normal;
+      color: rgba(237, 232, 223, 0.15);
+    }
 
-/* Bloc vidéo */
+    .glow-divider {
+      width: clamp(120px, 20vw, 240px);
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(237,232,223,0.15) 20%, rgba(237,232,223,0.15) 80%, transparent);
+      opacity: 0;
+      animation: fadeUp 0.8s var(--expo) 0.25s forwards;
+    }
 
-.video{
-    display:flex;
-    align-items:center;
-    margin-bottom:45px;
-}
+    .bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      opacity: 0;
+      animation: fadeUp 0.8s var(--expo) 0.4s forwards;
+    }
 
-.video img{
-    width:220px;
-    margin-right:25px;
-}
+    .message {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
 
-.video h2{
-    margin:0;
-    font-size:20px;
-}
+    .progress-bar {
+      width: clamp(140px, 22vw, 220px);
+      height: 1px;
+      background: rgba(237,232,223,0.1);
+      overflow: hidden;
+    }
 
-.video p{
-    margin-top:5px;
-    color:#bdbdbd;
-}
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(237,232,223,0.6));
+      width: 0%;
+      animation: fill 1s linear forwards;
+    }
 
-.video a{
-    text-decoration:none;
-    color:white;
-}
+    .link {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(237,232,223,0.15);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
 
-.video a:hover{
-    text-decoration:underline;
-}
+    .link:hover {
+      color: var(--cream);
+      border-color: rgba(237,232,223,0.4);
+    }
 
-.filter{
-text-align:center;
-margin-bottom:60px;
-}
+    .link::after { content: ' →'; }
 
-select{
-background:#111;
-color:white;
-border:1px solid #333;
-padding:8px 12px;
-font-family:Courier, monospace;
-}
+    .footer {
+      position: fixed;
+      bottom: clamp(20px, 4vh, 36px);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(237,232,223,0.18);
+      opacity: 0;
+      animation: fadeUp 0.8s var(--expo) 0.55s forwards;
+    }
 
-</style>
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
 
+    @keyframes fill {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+  </style>
 </head>
-
-<script>
-
-    function filterVideos(year){
-    
-    let videos = document.querySelectorAll(".video");
-    
-    videos.forEach(video => {
-    
-    if(year === "all"){
-    video.style.display = "flex";
-    }
-    
-    else if(video.dataset.year === year){
-    video.style.display = "flex";
-    }
-    
-    else{
-    video.style.display = "none";
-    }
-    
-    });
-    
-    }
-    
-    </script>
-
 <body>
 
-<header>
-Portfolio - Jules Gerent
-</header>
+  <h1 class="wordmark">Jules<br><em>Gerent</em></h1>
 
-<div class="container">
+  <div class="glow-divider"></div>
 
-<div class="filter">
-    <select onchange="filterVideos(this.value)">
-    <option value="all">Toutes les années</option>
-    <option value="2026">2026</option>
-    <option value="2025">2025</option>
-    <option value="2024">2024</option>
-    <option value="2023">2023</option>
-    </select>
-</div>
+  <div class="bottom">
+    <p class="message">redirection en cours…</p>
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+    <a class="link" href="https://julesgerent.github.io/portfolio">accéder directement</a>
+  </div>
 
-    
-<div class="video" data-year="2026">
-<a href="https://youtu.be/lSTJbk_yywo" target="_blank">
-<img src="https://img.youtube.com/vi/lSTJbk_yywo/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/lSTJbk_yywo" target="_blank">
-<h2>Vidéo de présentation</h2>
-</a>
-<p>Logiciels : After Effects 2020 & 2025 pour la vidéo, Premiere Pro 2026 & FL Studio pour le sound design. <br> Réalisé le : 17/03/2026 <br> <em> Note : la vidéo avait pour but d'être postée sur les réseaux sociaux, non pas pour vous.</em></p>
-</div>
-</div>
-
-
-<div class="video" data-year="2025">
-<a href="https://youtu.be/79gmNH6kAUw" target="_blank">
-<img src="https://img.youtube.com/vi/79gmNH6kAUw/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/79gmNH6kAUw" target="_blank">
-<h2>delusionnal</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design. <br> Réalisé le : 23/09/2025 <br> Vidéo de type "edit" sur les réseaux sociaux. <br> <em> Note : je fais ce genre de vidéo uniquement pour moi, sans poster.</em></p>
-</div>
-</div>
-
-
-<div class="video" data-year="2025">
-<a href="https://youtu.be/Apa-BMDYx_0" target="_blank">
-<img src="https://img.youtube.com/vi/Apa-BMDYx_0/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/Apa-BMDYx_0" target="_blank">
-<h2>Dark Thoughts</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design. <br> Réalisé le : 12/06/2025 <br> Vidéo de type "edit" sur les réseaux sociaux. <br> <em> Note : je fais ce genre de vidéo uniquement pour moi, sans poster.</em></p>
-</div>
-</div>
-
-    
-<div class="video" data-year="2025">
-<a href="https://youtu.be/Ofu-LYxvYs4" target="_blank">
-<img src="https://img.youtube.com/vi/Ofu-LYxvYs4/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/Ofu-LYxvYs4" target="_blank">
-<h2>Effet spécial pour un clip de musique</h2>
-</a>
-<p>Logiciels : After Effects 2020 <br> Réalisé le : 17/11/2025 <br> Ajout d'une cigarette en 3D avec simulation de chute. <br> <em> Note : le clip n'est pas encore sorti.</em></p>
-</div>
-</div>
-
-    
-<div class="video" data-year="2024">
-<a href="https://youtu.be/qe65Ir58W-I" target="_blank">
-<img src="https://img.youtube.com/vi/qe65Ir58W-I/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/qe65Ir58W-I" target="_blank">
-<h2>Jingle pour La Poste</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design. <br> Réalisé le : 19/06/2024 <br> Vidéo ayant pour but de promouvoir le passage de la flamme Olymique dans la ville de Sorgues  (84700).</p>
-</div>
-</div>
-    
-
-<div class="video" data-year="2024">
-<a href="https://youtu.be/EacXmIF0zLY" target="_blank">
-<img src="https://img.youtube.com/vi/EacXmIF0zLY/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/EacXmIF0zLY" target="_blank">
-<h2>Montage vidéo pour les équipes de La Poste</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design.<br> Réalisé le : 29/06/2024<br>Vidéo pour le groupe en interne, à l'occasion du passage de la flamme Olympique.</p>
-</div>
-</div>
-    
-
-<div class="video" data-year="2025">
-<a href="https://youtu.be/fn6kioPD2Tw" target="_blank">
-<img src="https://img.youtube.com/vi/fn6kioPD2Tw/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/fn6kioPD2Tw" target="_blank">
-<h2>The Magic Buttle</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design.<br>Réalisé le : 14/03/2025<br>Réalisé dans le cadre d'un travail en Cinéma Audiovisuel.</p>
-</div>
-</div>
-    
-
-<div class="video" data-year="2025">
-<a href="https://youtu.be/OfPK_AGkd-Y" target="_blank">
-<img src="https://img.youtube.com/vi/OfPK_AGkd-Y/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/OfPK_AGkd-Y" target="_blank">
-<h2>S'il vous plaît, laissez fermé.</h2>
-</a>
-<p>Logiciels : After Effects 2020 pour la vidéo et Premiere Pro 2020 pour le sound design.<br>Réalisé le : 01/06/2025<br>Ouverture pour la projection des films réalisés en spécialité & option Cinéma Audiovisuel projeté au cinéma Utopia.<br>Montage, étalonnage et tous éléments post-tournage ont été fait par moi, en devant respecter un délai de 15 jours (en ayant les cours en même temps).</p>
-</div>
-</div>
-    
-
-<div class="video" data-year="">
-<a href="https://youtu.be/wPozO-xVoao" target="_blank">
-<img src="https://img.youtube.com/vi/wPozO-xVoao/maxresdefault.jpg">
-</a>
-<div>
-<a href="https://youtu.be/wPozO-xVoao" target="_blank">
-<h2>AV-17</h2>
-</a>
-<p>Logiciels : After Effects 2022 pour les VFX et Final Cut Pro pour le sound design & montage.<br>Réalisé le : 04/02/2023<br>Réalisation du sript au montage d'un court-métrage dans le thème "le temps qui s'arrête" avec le soutien de Luc Serard, proposé par Kino-A puis projeté au cinéma VOX le 07/04/2023. </p>
-</div>
-</div>
-
-</div>
+  <footer class="footer">© 2026 — Jules Gerent</footer>
 
 </body>
 </html>
